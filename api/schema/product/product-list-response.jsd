@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "array",
+    "description": "Список доступных продуктов",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "Идентификатор продукта"
+        },
+        "name": {
+            "type": "string",
+            "description": "Название продукта"
+        },
+        "description": {
+            "type": "string",
+            "description": "Описание продукта"
+        },
+        "price": {
+            "type": "number",
+            "description": "Цена продукта"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "price"
+    ],
+    "additionalProperties": false
+}
+    

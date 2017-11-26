@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Тип ошибки"
+        },
+        "message": {
+            "type": "string",
+            "description": "Описание ошибки"
+        },
+        "params": {
+            "type": "array",
+            "description": "Список свойств с ошибоками",
+            "items": {
+                "code": {
+                    "type": "string",
+                    "description": "Код ошибки",
+                    "enum": ["required"]
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Описание ошибки"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Название свойства"
+                }
+            },
+            "required": [
+                "code",
+                "message",
+                "name"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "type",
+        "message"
+    ],
+    "additionalProperties": false
+}

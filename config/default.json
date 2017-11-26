@@ -1,0 +1,99 @@
+{
+    /**
+     * Подключение к БД
+     */
+    "mongodb": {
+
+        /*
+        Параметры соединения
+        */
+        "connection": {
+
+        }
+    },
+
+    /**
+     *Параметры логирования
+     */
+    "logger": {
+        
+        /**
+         * Уровень логирования
+         */
+        "level": "info"
+    },
+
+    /**
+     * Настройки запуска сервера
+     */
+    "server": {
+
+        /**
+         *Порт запуска сервера
+         */
+        "port": 8080,
+
+        /**
+         * Тип окружения:
+         * - production
+         * - development
+         * - test
+         */
+         "environment": "production",
+
+        /**
+         * При закрытии процесса создается core файл
+         */
+        "abort": false,
+
+        /**
+         * Ожидание выполнения
+         */
+         "timeout": 60
+    },
+
+    /**
+     *  Настройки для Swagger
+     *  @type {Object}
+     */
+     "swagger": {
+        
+        /**
+        * Описание API
+        * @type {String} *
+        */
+        "document": "api/main.yml",
+
+        /**
+        * Параметры для middleware маршрутизации
+        * @type {Object}
+        */
+        "router": {
+            /**
+            * Путь до контроллеров
+            * @type {String} *
+            */
+            "controller": "src/controller",
+            
+            /**
+            * Использование тестовых данных
+            * @type {boolean} *
+            */
+            "useStubs": false,
+    
+            /**
+            * Игнорирование не найденных путей. Иначе error код 500.
+            * @type {boolean} *
+            */
+            "ignoreMissingHandlers": false
+        },
+
+        /**
+        * Параметры для middleware валидации
+        * @type {Object}
+        */
+        "validator": {
+            "validateResponse": true
+        }
+    }
+}

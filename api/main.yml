@@ -1,0 +1,124 @@
+swagger: "2.0"
+info:
+  title: Cart product API
+  description: Cart product API
+  version: 0.0.1
+schemes:
+  - http
+  - https
+basePath: /api
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+
+paths:
+  /cart:
+    get:
+      x-swagger-router-controller: cart
+      operationId: getInfo
+      description: Получение информации о корзине
+      summary: Получение информации о корзине
+      tags:
+      - cart
+      responses:
+        200:
+          description: Успешное получение информации о корзине
+          schema:
+            $ref: '#/definitions/CartInfoResponse'
+        500:
+          schema:
+            $ref: '#/responses/500'
+    post:
+      x-swagger-router-controller: cart
+      operationId: addProduct
+      description: Добавление продукта в корзину
+      summary: Добавление продукта в корзину
+      tags:
+      - cart
+      parameters:
+      - name: payload
+        description: Данные о продукте
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CartProductDataRequest'
+      responses:
+        200:
+          description: Успешное добавление в корзину
+          type:
+            $ref: '#/definitions/EmptyResponse'
+        400:
+          schema:
+            $ref: '#/responses/400'
+        500:
+          schema:
+            $ref: '#/responses/500'
+  /cart/{product_id}:
+    delete:
+      x-swagger-router-controller: cart
+      operationId: deleteProduct
+      description: Удаление продукта из корзины
+      summary: Удаление продукта из корзины
+      tags:
+      - cart
+      parameters:
+      - name: product_id
+        description: Идентификатор продукта
+        in: path
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Успешное удаление
+          schema:
+            $ref: '#/definitions/EmptyResponse'
+        400:
+          schema:
+            $ref: '#/responses/400'
+        500:
+          schema:
+            $ref: '#/responses/500'
+  /products:
+    get:
+      x-swagger-router-controller: product
+      operationId: getList
+      description: Получение списка продуктов
+      summary: Получение списка продуктов
+      tags:
+      - product
+      responses:
+        200:
+          description: Успешное получение списка продуктов
+          schema:
+            $ref: '#/definitions/ProductListResponse'
+        500:
+          schema:
+            $ref: '#/responses/500'
+responses:
+  400:
+    description: Неверные параметры запроса
+    schema:
+      $ref: "#/definitions/Error"
+  404:
+    description:  Запрашиваемый метод не существует
+    schema:
+      $ref: "#/definitions/Error"
+  500:
+    description: Unknown error
+    schema:
+      $ref: "#/definitions/Error"
+
+definitions:
+  CartInfoResponse:
+    $ref: ./api/schema/cart/info-response.jsd
+  CartProductDataRequest:
+    $ref: ./api/schema/cart/product-request.jsd
+  ProductListResponse:
+    $ref: ./api/schema/product/product-list-response.jsd
+  EmptyResponse: 
+    type: object
+    additionalProperties: false
+  Error:
+    $ref: ./api/schema/error.jsd

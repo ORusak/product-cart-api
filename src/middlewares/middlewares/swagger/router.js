@@ -1,0 +1,11 @@
+/*
+*
+*/
+
+'use strict'
+
+const swagger = require('_/lib/swagger')
+
+module.exports = function factory (options) {
+  return swagger.middleware.swaggerRouter(options)
+}

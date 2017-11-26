@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object",
+    "description": "Информация о корзине",
+    "properties": {
+        "total_sum": {
+            "type": "number",
+            "description": "Общая стоимость продуктов в корзине"
+        },
+        "products_count": {
+            "type": "integer",
+            "description": "Общее количество продуктов в корзине"
+        },
+        "products": {
+            "type": "array",
+            "description": "Список уникальных продуктов в корзине",
+            "items": {
+                "id": {
+                    "type": "integer",
+                    "description": "Идентификатор группы продукта"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "description": "Количество продуктов в группе"
+                },
+                "sum": {
+                    "type": "number",
+                    "description": "Суммарная стоимость продуктов в группе"
+                }
+            },
+            "required": [
+                "id",
+                "quantity",
+                "sum"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "total_sum",
+        "products_count",
+        "products"
+    ],
+    "additionalProperties": false
+}
+    
