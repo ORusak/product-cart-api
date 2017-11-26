@@ -6,6 +6,7 @@ const yaml = require('js-yaml')
 
 let isConfigured = false
 let _middleware = null
+let _swaggerDoc = null
 
 module.exports = {
   /**
@@ -21,24 +22,59 @@ module.exports = {
   },
 
   /**
+   * Инициализированный конфиг swagger
+   * @type {object}
+   */
+  get swaggerDoc () {
+    if (isConfigured === false) {
+      throw new Error(`Not configure swagger middleware`)
+    }
+
+    return _swaggerDoc
+  },
+
+  /**
    * Инициализация
    * @param options
    * @return {Promise}
    */
   configure (options) {
+    const { document, log } = options
+
     return new Promise((resolve) => {
-            //  получение основных настроек
-            // eslint-disable-next-line no-sync
-      const swaggerYml = fs.readFileSync(options.document, 'utf8')
-      const swaggerDoc = yaml.safeLoad(swaggerYml)
+      //  получение основных настроек
+      const resolveRefs = require('json-refs').resolveRefs
+      const YAML = require('yaml-js')
+      const fs = require('fs')
 
-      swaggerTools.initializeMiddleware(swaggerDoc, (middleware) => {
-        _middleware = middleware
+      const root = YAML.load(fs.readFileSync(document, 'utf8').toString())
+      const options = {
+        filter: ['relative', 'remote'],
+        loaderOptions: {
+          processContent: function (res, callback) {
+            callback(null, YAML.load(res.text))
+          }
+        },
+        resolveCirculars: false
+      }
 
-        isConfigured = true
+      resolveRefs(root, options)
+        .then(result => {
+          const swaggerDoc = result.resolved
+          
+          _swaggerDoc = swaggerDoc
 
-        resolve(null)
-      })
+          swaggerTools.initializeMiddleware(swaggerDoc, (middleware) => {
+            _middleware = middleware
+
+            isConfigured = true
+
+            log.info('[SwaggerTool] Initiated')
+            log.info('[SwaggerTool] Config: %s', document)
+
+            resolve(null)
+          })
+        })
     })
   }
 }

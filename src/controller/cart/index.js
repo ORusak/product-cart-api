@@ -1,7 +1,11 @@
 'use strict'
 
+const addProduct = require('./add-product')
+const deleteProduct = require('./delete-product')
+const getInfo = require('./get-info')
+
 module.exports = {
-    addProduct: require('./add-product'),
-    deleteProduct: require('./delete-product'),
-    getInfo: require('./get-info')
+  addProduct: addProduct.run.bind(addProduct),
+  deleteProduct: deleteProduct.run.bind(deleteProduct),
+  getInfo: getInfo.run.bind(getInfo)
 }

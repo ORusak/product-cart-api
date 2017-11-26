@@ -11,7 +11,7 @@ const _ = require('lodash')
 
 const { RequestContext } = require('_/lib/context')
 
-module.exports = (options) => {
+module.exports = function incomingRequest (options) {
   const log = options.log
 
   /**

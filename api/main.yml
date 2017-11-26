@@ -5,13 +5,16 @@ info:
   version: 0.0.1
 schemes:
   - http
-  - https
 basePath: /api
 consumes:
   - application/json
 produces:
   - application/json
 tags:
+- name: cart
+  description: Info cart
+- name: product
+  description: Info products
 
 paths:
   /cart:
@@ -28,6 +31,7 @@ paths:
           schema:
             $ref: '#/definitions/CartInfoResponse'
         500:
+          description: Не известная ошибка
           schema:
             $ref: '#/responses/500'
     post:
@@ -47,12 +51,14 @@ paths:
       responses:
         200:
           description: Успешное добавление в корзину
-          type:
+          schema:
             $ref: '#/definitions/EmptyResponse'
         400:
+          description: Неверные параметры запроса
           schema:
             $ref: '#/responses/400'
         500:
+          description: Не известная ошибка
           schema:
             $ref: '#/responses/500'
   /cart/{product_id}:
@@ -75,9 +81,11 @@ paths:
           schema:
             $ref: '#/definitions/EmptyResponse'
         400:
+          description: Неверные параметры запроса
           schema:
             $ref: '#/responses/400'
         500:
+          description: Не известная ошибка
           schema:
             $ref: '#/responses/500'
   /products:
@@ -94,6 +102,7 @@ paths:
           schema:
             $ref: '#/definitions/ProductListResponse'
         500:
+          description: Не известная ошибка
           schema:
             $ref: '#/responses/500'
 responses:

@@ -1,7 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
-const CustomErrors = require('_/lib/errors')
+const CustomErrors = require('_/lib/error')
 const httpCode = require('http-status-codes')
 
 let addStackTrace = _.noop
@@ -15,7 +15,7 @@ const addListError = (errors, data) => {
  * @param {Boolean} [options.sendErrorStack] Флаг, надо ли отправлять стек в ответах ошибок
  * @return {Function}
  */
-module.exports = (options) => {
+module.exports = function error (options) {
   const log = options.log
   const modeView = options.environment !== 'production'
 
@@ -34,7 +34,7 @@ module.exports = (options) => {
     const responseData = {}
     //  по умолчанию, мета ошибок хранится в errors, но не всегда
     let errors = error.errors
-    let code = error.code
+    let code
     let message = error.message
 
         //  custom error

@@ -1,5 +1,4 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema",
     "type": "object",
     "properties": {
         "type": {
@@ -12,28 +11,32 @@
         },
         "params": {
             "type": "array",
-            "description": "Список свойств с ошибоками",
+            "description": "Список свойств с ошибками",
             "items": {
-                "code": {
-                    "type": "string",
-                    "description": "Код ошибки",
-                    "enum": ["required"]
+                "type": "object",
+                "description": "Описание ошибки",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Код ошибки",
+                        "enum": ["required"]
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Описание ошибки"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Название свойства"
+                    }
                 },
-                "message": {
-                    "type": "string",
-                    "description": "Описание ошибки"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Название свойства"
-                }
-            },
-            "required": [
-                "code",
-                "message",
-                "name"
-            ],
-            "additionalProperties": false
+                "required": [
+                    "code",
+                    "message",
+                    "name"
+                ],
+                "additionalProperties": false
+            }
         }
     },
     "required": [

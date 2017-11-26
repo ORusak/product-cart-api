@@ -2,16 +2,24 @@
   "name": "cart-api",
   "version": "0.0.1",
   "description": "Service api product card",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "app.js",
+    "start": "node index.js",
     "postinstall": "rm -f \"./node_modules/_\" && ln -s \"./../src/\" \"./node_modules/_\""
   },
   "keywords": [
     "node.js",
     "mongodb"
   ],
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/ORusak/product-cart-api"
+  },
+  "bugs": {
+    "url": "https://github.com/ORusak/product-cart-api",
+    "email": "hare.brown@gmail.com"
+  },
   "author": "Oleg Rusak",
   "license": "MIT",
   "dependencies": {
@@ -22,7 +30,10 @@
     "swagger-tools": "0.10.3",
     "winston": "2.4.0",
     "require-all": "2.2.0",
-    "uuid": "3.1.0"
+    "uuid": "3.1.0",
+    "connect-timeout": "1.9.0",
+    "json-refs": "3.0.2",
+    "yaml-js": "0.2.0"
   },
   "devDependencies": {
     "standard": "10.0.3",

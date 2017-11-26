@@ -6,6 +6,6 @@
 
 const swagger = require('_/lib/swagger')
 
-module.exports = function factory (options) {
+module.exports = function swaggerMetadata (options) {
   return swagger.middleware.swaggerMetadata()
 }

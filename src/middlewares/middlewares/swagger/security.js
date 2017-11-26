@@ -6,6 +6,6 @@
 
 const swagger = require('_/lib/swagger')
 
-module.exports = function factory (options) {
+module.exports = function swaggerSecurity (options) {
   return swagger.middleware.swaggerSecurity(options.method)
 }

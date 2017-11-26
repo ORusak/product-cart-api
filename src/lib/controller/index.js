@@ -6,6 +6,9 @@
 
 const _ = require('lodash')
 
+const DEFAULT_STATUS = 200
+const DEFAULT_CONTENT_TYPE = 'application/json'
+
 /**
  * @class
  */
@@ -75,10 +78,13 @@ class BaseController {
               log.debug(`[${name}] End with result`, { result })
 
               if (!response.finished) {
-                response.hal(result)
+                response
+                .status(DEFAULT_STATUS)
+                .type(DEFAULT_CONTENT_TYPE)
+                .json(result)
               }
             })
-            // бросаем все ошибки на мидлвару ошибок
+            // бросаем все ошибки на middleware ошибок
             .catch(next)
   }
 

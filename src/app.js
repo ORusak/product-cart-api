@@ -1,11 +1,11 @@
 'use strict'
 
 const config = require('config')
-const app = require('express')
+const express = require('express')
 
 const log = require('_/instance/log')
 
-const packageInfo = require('./package')
+const packageInfo = require('./../package')
 
 log.info(`[App] ${packageInfo.name} v${packageInfo.version}`)
 
@@ -13,57 +13,47 @@ const nodeEnv = config.get('server.environment')
 
 log.info(`[App] Start init application (environment=${nodeEnv})`)
 
-try {
-  appInit()
-} catch (error) {
-  log.error('[App] Error on init application: ', error, error.stack)
+module.exports = function init () {
+  try {
+    return appInit()
+  } catch (error) {
+    log.error('[App] Error on init application: ', error, error.stack)
 
-  process.exit(1)
+    throw new Error('[App] Error init express app')
+  }
 }
 
-//  Обработчики процесса
-//  обработка unhandledRejection
-const abort = config.get('server.abort')
-
-require('src/lib/unhandled-rejection')({
-  log,
-  abort
-})
-
-//  catches ctrl+c event
-process.once('SIGINT', () => {
-  log.error('exit by SIGINT')
-
-  if (abort) {
-    process.abort()
-  } else {
-    process.exit(1)
-  }
-})
-
 async function appInit () {
+  // Инициализация ExpressJS
+  const app = express()
+
   //  отключаем заголовки
   //  не передаем информацию о сервере для безопасности
   app.disable('x-powered-by')
 
   //  Инициализация подключения к БД
 
-  //  Инициализация swagger-tools
+  //  Инициализация swagger-tools для этапа инициализации middleware
   const swaggerTools = require('_/lib/swagger')
   const swaggerConfig = config.get('swagger')
 
   await swaggerTools.configure({
-    document: swaggerConfig.document
+    document: swaggerConfig.document,
+    log
   })
 
-  //  todo: cors, hal, cookieParser, security
   //  Инициализация middleware
+  const middlewares = require('_/middlewares')
+
+  middlewares.configure({ log })
+
+  //  todo: cors, hal, cookieParser, security
   const {
     timeout,
     incomingRequest,
     swagger,
     errors
-} = middlewares.list
+  } = middlewares.list
 
   const requestTimeout = config.get('server.timeout')
 
@@ -78,7 +68,7 @@ async function appInit () {
   }))
 
   app.use(swagger.ui({
-    swaggerUi: '/audit-documents/docs',
+    swaggerUi: `${swaggerTools.swaggerDoc.basePath}/docs`,
     skip: false
   }))
 
@@ -90,6 +80,6 @@ async function appInit () {
   app.use(swagger.router(swaggerConfig.router))
 
   app.use(errors({ environment: config.get('server.environment') }))
-}
 
-module.exports = app
+  return app
+}

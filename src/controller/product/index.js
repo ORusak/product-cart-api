@@ -1,5 +1,7 @@
 'use strict'
 
+const getList = require('./get-list')
+
 module.exports = {
-    getList: require('./get-list')
+  getList: getList.run.bind(getList)
 }

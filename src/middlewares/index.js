@@ -5,6 +5,7 @@
 'use strict'
 
 const _ = require('lodash')
+const util = require('util')
 
 let optionsGlobal
 let isConfigured = false
@@ -15,22 +16,22 @@ let isConfigured = false
 const middlewares = require('require-all')({
   dirname: `${__dirname}/middlewares`,
   resolve (middleware) {
-    const middelwareFactory = options => {
+    const middelwareFactory = (options = {}) => {
       const log = optionsGlobal.log
       const name = middleware.name || ''
 
-      log.debug(`[Module.Middleware.${name}] Start init`)
+      log.debug(`[Middleware.${name}] Start init`)
 
       const skip = options.skip
 
       if (skip) {
-        log.debug(`[Module.Middleware.${name}] Skipped`)
+        log.info(`[Middleware] Skipped: %s`, name)
 
         return null
       }
       const optionsInit = Object.assign({}, optionsGlobal, options)
 
-      log.debug(`[Module.Middleware.Timeout] Options: `, optionsInit)
+      log.info(`[Middleware] Initiated: %s`, name, util.inspect(optionsInit, { depth: 0 }))
 
       return middleware(optionsInit)
     }
@@ -51,16 +52,18 @@ module.exports = {
     //  todo: ora: Проверка на обязательные параметры
     const log = options.log
 
-    log.info('[Module.Middlware] Start configure with options:', {
-      options: {
-        log: log.name
-      }
-    })
+    log.debug('[Module.Middlware] Start configure')
 
     optionsGlobal = options
 
     isConfigured = true
   },
 
-  list: moduleMiddlewaresInit
+  get list () {
+    if (isConfigured === false) {
+      throw new Error(`Not configure swagger middleware`)
+    }
+
+    return moduleMiddlewaresInit
+  }
 }
