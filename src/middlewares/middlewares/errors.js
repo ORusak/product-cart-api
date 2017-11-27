@@ -37,12 +37,19 @@ module.exports = function error (options) {
     let code
     let message = error.message
 
-        //  custom error
+    log.error('[Middleware.Error]', error)
+
+    //  custom error
     switch (true) {
       case error instanceof CustomErrors.ValidateDataError:
       case error instanceof CustomErrors.RequirePropertyError:
         code = httpCode.NOT_ACCEPTABLE
         message = modeView && message ? message : 'Validate Error'
+
+        break
+      case error instanceof CustomErrors.InvalidParamsError:
+        code = httpCode.BAD_REQUEST
+        message = modeView && message ? message : 'Bad request'
 
         break
       case error instanceof CustomErrors.NotFoundError:

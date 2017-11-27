@@ -1,0 +1,29 @@
+{
+    "type": "object",
+    "description": "Описание продукта",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "Идентификатор продукта"
+        },
+        "name": {
+            "type": "string",
+            "description": "Название продукта"
+        },
+        "description": {
+            "type": "string",
+            "description": "Описание продукта"
+        },
+        "price": {
+            "type": "number",
+            "description": "Цена продукта"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "price"
+    ],
+    "additionalProperties": false
+}

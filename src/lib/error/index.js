@@ -52,10 +52,18 @@ class ValidateDataError extends Error {
   }
 }
 
+class InvalidParamsError extends Error {
+  constructor (...arg) {
+    super(arg)
+  }
+}
+
+
 module.exports = {
   NotFoundError,
   InvalidPropertyError,
   RequirePropertyError,
   TimeoutError,
-  ValidateDataError
+  ValidateDataError,
+  InvalidParamsError
 }

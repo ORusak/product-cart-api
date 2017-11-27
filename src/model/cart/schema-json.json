@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "description": "Описание корзины",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "Идентификатор корзины"
+        },
+        "products": {
+            "type": "array",
+            "description": "Список продуктов в корзине",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Идентификатор продукта"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "description": "Количество продуктов"
+                    }
+                }
+            }
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Время обновления"
+        }
+    },
+    "required": [
+        "id",
+        "count",
+        "updated_at"
+    ],
+    "additionalProperties": false
+}

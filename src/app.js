@@ -32,6 +32,12 @@ async function appInit () {
   app.disable('x-powered-by')
 
   //  Инициализация подключения к БД
+  await require('_/instance/db')
+
+  //  миграции начальных данных
+  const migration = require('../migration')
+
+  await migration.migrate()
 
   //  Инициализация swagger-tools для этапа инициализации middleware
   const swaggerTools = require('_/lib/swagger')
