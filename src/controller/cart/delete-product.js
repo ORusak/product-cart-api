@@ -35,7 +35,7 @@ const controller = new Controller({
   async main (ctx, params) {
     const productId = params.parameters['product_id']
 
-    //  поищем текущую козину
+    //  поищем текущую корзину
     const carts = await Cart.find({ id: idCart }).exec()
     const cart = _.first(carts)
 
