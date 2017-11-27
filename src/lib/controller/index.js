@@ -53,7 +53,7 @@ class BaseController {
 
     const {log, name} = that
 
-    log.info(`[${name} Run`, { parameters })
+    log.info(`[${name}] Run`, { parameters })
 
     // Предобработка
     return Promise.resolve(that.preProcessing(ctx, params))
