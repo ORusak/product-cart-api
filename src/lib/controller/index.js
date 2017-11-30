@@ -38,7 +38,7 @@ class BaseController {
    *
    * @return {Promise.<object>} -
    */
-  run (request, response, next) {
+  async run (request, response, next) {
     const that = this
     const { ctx } = request
     const swaggerParams = request.swagger.params
@@ -55,37 +55,38 @@ class BaseController {
 
     log.info(`[${name}] Run`, { parameters })
 
-    // Предобработка
-    return Promise.resolve(that.preProcessing(ctx, params))
-            // запускаем main
-            .then((result) => that.main(ctx, params, result))
+    try {
+      //  todo: переработать на async/await
+      // Предобработка
+      const dataPre = await that.preProcessing(ctx, params)
 
-            // Если в результате выполнения блока main вернулась ошибка
-            //  в том числе как объект class Error
-            .then((result) => {
-              if (result instanceof Error) {
-                log.warn(name, `Not throwable Error`, result)
+      // запускаем main
+      const dataMain = await that.main(ctx, params, dataPre)
 
-                return Promise.reject(result)
-              }
+      // Если в результате выполнения блока main вернулась ошибка
+      //  в том числе как объект class Error
+      if (dataMain instanceof Error) {
+        log.warn(name, `Not throwable Error`, dataMain)
 
-              return result
-            })
-            // Постобработка
-            .then((result) => that.postProcessing(ctx, params, result))
-            .then((result) => {
-              log.info(`[${name}] End`)
-              log.debug(`[${name}] End with result`, { result })
+        throw dataMain
+      }
 
-              if (!response.finished) {
-                response
-                .status(DEFAULT_STATUS)
-                .type(DEFAULT_CONTENT_TYPE)
-                .json(result)
-              }
-            })
-            // бросаем все ошибки на middleware ошибок
-            .catch(next)
+      // Постобработка
+      const dataPost = await that.postProcessing(ctx, params, dataMain)
+
+      log.info(`[${name}] End`)
+      log.debug(`[${name}] End with result`, { dataPost })
+
+      if (!response.finished) {
+        response
+        .status(DEFAULT_STATUS)
+        .type(DEFAULT_CONTENT_TYPE)
+        .json(dataPost)
+      }
+    } catch (error) {
+      // бросаем все ошибки на middleware ошибок
+      next(error)
+    }
   }
 
   /**
@@ -93,19 +94,19 @@ class BaseController {
    * @param {Object} ctx Контекст запроса
    * @param {Object} params Параметры запроса
    *
-   * @returns {Promise.<Object>} -
+   * @returns {null} -
    */
   preProcessing (ctx, params) {
-    return Promise.resolve(null)
+    return null
   }
 
   /**
    * Постобработка данных полученых на этапе main
    * @param {Object} ctx Контекст запроса
    * @param {Object} params Данные запроса
-   * @param {*} result Результат выполненния этапа main
+   * @param {*} result Результат выполнения этапа main
    *
-   * @returns {Promise.<Object>} -
+   * @returns {Object} -
    */
   postProcessing (ctx, params, result) {
     return result
