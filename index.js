@@ -39,7 +39,7 @@ require('_/lib/unhandled-rejection')({
   abort
 })
 
-//  catches ctrl+c event
+//  catch ctrl+c event
 process.once('SIGINT', () => {
   log.error('exit by SIGINT')
 
@@ -50,6 +50,6 @@ process.once('SIGINT', () => {
   } else {
     //  позволяем приложению закончить работу обработкой по умолчанию
     //  1. генерацией правильного кода выхода
-    process.emit('SIGTERM')
+    process.kill(process.pid, 'SIGINT')
   }
 })
