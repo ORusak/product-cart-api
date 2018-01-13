@@ -4,7 +4,7 @@
   "description": "Service api product card",
   "main": "index.js",
   "scripts": {
-    "test": "test",
+    "test": "ava ./src/**/*.spec.js",
     "start": "node index.js",
     "postinstall": "rm -f \"./node_modules/_\" && ln -s \"./../src/\" \"./node_modules/_\""
   },
