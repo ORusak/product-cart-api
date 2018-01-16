@@ -38,7 +38,7 @@ class BaseController {
    *
    * @return {Promise.<object>} -
    */
-  run (request, response, next) {
+  async run (request, response, next) {
     const that = this
     const { ctx } = request
     const swaggerParams = request.swagger.params
@@ -55,55 +55,53 @@ class BaseController {
 
     log.info(`[${name}] Run`, { parameters })
 
-    // Предобработка
-    return Promise.resolve(that.preProcessing(ctx, params))
-            // запускаем main
-            .then((result) => that.main(ctx, params, result))
+    try {
+      // Предобработка
+      const preResult = await that.preProcessing(ctx, params)
+              // запускаем main
+      const result = await that.main(ctx, params, preResult)
 
-            // Если в результате выполнения блока main вернулась ошибка
-            //  в том числе как объект class Error
-            .then((result) => {
-              if (result instanceof Error) {
-                log.warn(name, `Not throwable Error`, result)
+      // Если в результате выполнения блока main вернулась ошибка
+      //  в том числе как объект class Error
+      if (result instanceof Error) {
+        log.warn(name, `Not throwable Error`, result)
 
-                return Promise.reject(result)
-              }
+        throw result
+      }
 
-              return result
-            })
-            // Постобработка
-            .then((result) => that.postProcessing(ctx, params, result))
-            .then((result) => {
-              log.info(`[${name}] End`)
-              log.debug(`[${name}] End with result`, { result })
+      const postResult = await that.postProcessing(ctx, params, result)
 
-              if (!response.finished) {
-                response
-                .status(DEFAULT_STATUS)
-                .type(DEFAULT_CONTENT_TYPE)
-                .json(result)
-              }
-            })
-            // бросаем все ошибки на middleware ошибок
-            .catch(next)
+      log.info(`[${name}] End`)
+      log.debug(`[${name}] End with result`, { postResult })
+
+      if (!response.finished) {
+        response
+          .status(DEFAULT_STATUS)
+          .type(DEFAULT_CONTENT_TYPE)
+          .json(postResult)
+      }
+    } catch (error) {
+      // бросаем все ошибки на middleware ошибок
+      next(error)
+    }
   }
 
   /**
-   * Предобработка данных полученых на этапе main
+   * Предобработка данных полученных на этапе main
    * @param {Object} ctx Контекст запроса
    * @param {Object} params Параметры запроса
    *
    * @returns {Promise.<Object>} -
    */
   preProcessing (ctx, params) {
-    return Promise.resolve(null)
+    return null
   }
 
   /**
    * Постобработка данных полученых на этапе main
    * @param {Object} ctx Контекст запроса
    * @param {Object} params Данные запроса
-   * @param {*} result Результат выполненния этапа main
+   * @param {*} result Результат выполнения этапа main
    *
    * @returns {Promise.<Object>} -
    */
